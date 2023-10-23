@@ -1,0 +1,684 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Price Processes</title>
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+		<link rel="stylesheet" href="tweaks.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background-image="imgs/door.jpg">
+					<h3>RE01:<br>Corporate Finance <br>&amp; Real Estate<br><br></h3>
+					<h2>Modeling<br>Price Dynamics</h2><br><br>
+					<p>Professor Thies Lindenthal
+						<br /><a href="mailto:htl24@cam.ac.uk">htl24@cam.ac.uk</a>
+					</p>
+					<p>October 2023</p>
+				</section>
+
+
+
+																<section data-markdown>
+																	<textarea data-template>
+																	## Random processes<span class="subtitle"><br>... and property prices/returns.</span>
+																	</textarea>
+																</section>
+
+
+																<section data-markdown >
+																	<textarea data-template>
+																		## Describing Risk and Return<span class="subtitle"><br/>Terminology, concepts and intuition.</span>
+
+																		* Why? We need precise language to describe trajectory of prices/rents/returns/... when communicating.
+																		* Formalisation needed for maths and many models
+																			-	Random processes represent numerical values of some system randomly changing over time
+																			- Examples: Sequence of red/black in Roulette. Day of the week people in this group were born.
+																		* Most theoretical models in finance start with a long list of assumptions on the underlying (random) processes
+
+																		Note:
+																		Why is it so important to establish exact terminology on price dynamics?
+																		Well, the most obvious reason is that it makes communication much easier
+																		and simply more efficient. Throughout this course we will again and again
+																		evaluate the risk and return of real estate and other asset classes.
+																		Sharing the same set of concepts and terminology allows for more
+																		structured discussions.
+
+																		In addition, formalisation is needed when developing theoretical
+																		models in finance. In these models, so-called random or stochastic
+																		processes play an important role to make the math tractable.
+																		A random processes represents the values of some system that randomly
+																		changes over time. Examples could be the sequence of the occurance
+																		of red or black in a game of Roulette. Or the last digit of the
+																		Cambridge University ID of every member of this group here...
+
+																		Most theoretical models in finance start with a long list of
+																		assumptions on the underlying (random) processes, so we need to
+																		know whether these assumptions are realistic for our data
+																		before we can use these models in real estate.
+																	</textarea>
+																</section>
+																<section data-markdown >
+																	<textarea data-template>
+																		## Why bother?<span class="subtitle"><br/>Forecasts, benchmarks, comparables.</span>
+
+																		* Make (useful?) forecasts
+																			- If we know how e.g. prices have moved in the past, we can make better predictions of potential future values
+																			-	Identify patterns
+																		*	Price vs. value
+																			- Transaction prices depend on a combination of multiple processes
+																			- True fundamental value processes + randomness at transaction level
+																		* Comparing: Index good representation of reality?
+																			- Does indexing change the process?
+																			- Values differ from prices - which again differ from index estimates?
+
+																		Note:
+																		Let me give you three additional motivations for studying real estate price dynamics:
+
+																		1) First, if we know how prices or returns have moved in the past,
+																		we can model potential outcomes in the future and make more
+																		reliable predictions.
+
+																		2) Second, it helps us with with a fundamental challenge:
+																		The true value of a property is not readily observable.
+																		Often, the best but still imperfect proxy for true value is a recorded
+																		transaction value &ndash; which is shaped by random processes.
+
+																		3) Third, we can check whether indices are good representations
+																		of the underlying assets. Ideally, an index should exhibit
+																		the same dynamics as the assets it covers.
+																		If not, we might be able to fix this mismatch
+																		&ndash; or should at least know about it.
+																	</textarea>
+																</section>
+																<section data-markdown >
+																	<textarea data-template>
+																		## Real estate price dynamics<span class="subtitle"><br/>Knowledge of real estate price dynamics based on:</span>
+																		* Historical empirical evidence (transactions prices, appraisals; indexes, residuals)
+																		*	Economic theory (Capital market theory, micro-economic theory)
+																		*	Common sense
+
+																		Note:
+																		The understanding of price dynamics is based on historic data such
+																		as past transaction prices or valuations - empirical.
+
+																		Also, economic theory can inform us on how any
+																		process <emph>should</emph> look like &ndash; so this is more normative.
+
+																		Finally, a good dose of common sense and institutional knowledge
+																		helps when fomalising and evaluating price dynamics.
+																	</textarea>
+																</section>
+
+																<section data-markdown >
+																	<textarea data-template>
+																		## Eight sources/components<span class="subtitle"><br />(nicked from David Geltner, MIT)</span>
+
+																		1. Long-term trend rate
+
+																		2. Volatility
+
+																		3. Cyclicality
+
+																		4. Mean-reversion
+
+																		5. Inertia (autoregression)
+
+																		6. Price dispersion (noise)
+
+																		7. Idiosyncratic drift
+
+																		8. Black swans
+
+																		Note:
+																		In the following, I would like to introduce 8 components of
+																		real estate price dynamics.
+
+																		And this is a good moment to come clear:
+																		This talk is heavily borrowing from a conference talk
+																		by David Geltner from MIT &ndash; He really is one of the most
+																		brilliant minds in our field and deserves all credit.
+																		I simply added a few more examples, here and there.
+																		Any errors are mine, of course.
+
+																		Let's go through the 8 components bit by bit.
+
+																	</textarea>
+																</section>
+
+																<section>
+																	<h2>UK House prices, 1990-2017<span class="subtitle"><br>
+																UK countries & English regions, nominal terms</span></h2>
+																	<img src="imgs/base.png" />
+																	<aside class="notes">
+
+																	<aside>
+																</section>
+
+																<section>
+																	<h2>1. General trend<span class="subtitle"><br>
+																		Move with inflation? Depreciation? Impact of cheaper financing?</span></h2>
+																		<ul><li>In 1990-2017, monthly returns were ~0.45%, annualised ~5.5%</li></ul>
+																	<img src="imgs/1_trend.png" height=410 />
+																	<aside class="notes">
+																		In the UK, the long-term growth has been relative high with an
+																		annualised 5.5% in nominal terms over the last 27 years.
+
+																		<p>You can calculate the general trend by taking a ruler and drawing a straight line
+																		onto the plot, connecting the start and end points. If you wanted to
+																		convert the total change to annual numbers, don't just divide by the number of years but
+																		calculate the geometric mean.</p>
+
+																		<p>On this island, land supply is more constrained than in other regions of the world
+																		while demand for space was expanding. This directly raises the question however whether this relative shortage of land is real
+																		&ndash; or man-made and whether the
+																		very-very-long-term trend will be as low as in other markets.</p>
+
+																		<p>Let's have a quick tour around the world and throught the centuries,
+																		just to get a feeling for typical general trends. Or the lack thereof.</p>
+																	<aside>
+																</section>
+
+
+																<section data-markdown >
+																	<textarea data-template>
+																	## Which Trend?<span class="subtitle"><br/>In the long run... real prices appear to remain constant.</span>
+																	* London CRE? Flat/declining.
+																	* US resi? No increase.
+																	* US CRE? No increase.
+																	* Norway, Beijing, Amsterdam resi? No increase.
+
+																	Note:
+
+																	Let's get back to the UK.
+
+																	We do not have much very long-term house price data for London or England overall.
+																	Well, I am sure the data is there, somewhere, so somebody could write fantastic
+																	paper about it.
+
+																	What we have though, is rental data for houses in London, going back all the way to 1500.
+																	Rents are the most important fundamental value driver for real estate,
+																	so we might learn something from any trends in real rents.
+
+																	Well, rents did not increase much, less than 1% per year, so if there was any growth in the Prices
+																	it probably did not exceed that rate as well.
+
+																	I know I talked for quite a while about something that seems
+																	really easy and straightforward, a plain linear trend in prices.
+																	The point I want to make here, though, is that the time window in which it
+																	is estimated matters. Even when prices have gone up robustly over 20-30 years,
+																	it might still be worth a thought to correct any trend estimate downwards to
+																	1-2 percent below the inflation rate.
+																	</textarea>
+																</section>
+
+																<section>
+																	<h2>2. Short term volatility <span class="subtitle"><br>
+																		The closest we have to a random walk...</span></h2>
+																	<img src="imgs/2_vol.png" height=410 />
+																	<aside class="notes">
+																		This is the component of real estate asset price dynamics that
+																		reflects the Random Walk &ndash; the current response of property
+																		prices to relevant current news.
+																		Property asset markets are generally well functioning markets that
+																		naturally reflect and respond to news, at least, over some time
+																		horizon and with some lag.
+																		This is the part of real estate price dynamics that is
+																		therefore similar to stock market price dynamics.
+
+																		The quantitative measurement of volatility in real estate
+																		market prices depends strongly on the frequency at which the
+																		returns are computed.
+
+																		Also, Random Walk volatility accumulates in the level of the price index.
+																		If the market randomly moves up one period, then its movement
+																		in the next period will start from that new level that the index
+																		moved to the previous period.
+
+																		In the aggregate index, volatility does not show up much.
+																		This is because volatility (steadily accumulating risk realization)
+																		is largely obscured by Cyclicality (Component 3),
+																		Mean Reversion (Component 4), and Inertia (Component 5).
+
+																		(These components of real estate price dynamics will be illustrated
+																		in the following slides.)
+																		But just because volatility does not show does not mean that
+																		volatility is not present in the real estate price index.
+																		It is most certainly present, as I said before, as it is
+																		the reflection of the arrival of “news” in the valuation of property assets.
+
+																		At the asset level, random-walk volatility is stronger than at the market level.
+																		in a new paper, co-authors and I show that the idiosyncratic risk is
+																		large, especially for short holding periods, and much of it follows a random walk process.
+																	<asides>
+																</section>
+																<section>
+																		<h2>Intuition <span class="subtitle"><br>
+																			The random walk process is memory-less.</span></h2>
+																		<img src="imgs/randomwalkloop.gif"/>
+																		<aside class="notes">
+																			At each point in time, the next move is independent of all previous moves.
+																			The process is memoryless.
+
+																			Also, the magnitude and direction of each new move
+																			is identically distributed in time.
+																		<asides>
+																	</section>
+																	<section>
+																			<h2>Intuition <span class="subtitle"><br>
+																				Same process, very different outcome.</span></h2>
+																			<img src="imgs/randomwalk2.png"/>
+																			<aside class="notes">
+																				The resulting time series aggregates each individual step so the outcomes can be
+																				really different.
+																			<asides>
+																		</section>
+																		<section>
+																				<h2>Intuition <span class="subtitle"><br>
+																					500 runs: Most remain close to the mean, but some veer off.</span></h2>
+																				<img src="imgs/randomwalk3.png"/>
+																				<aside class="notes">
+																					Look at the variation in outcomes!
+																				<asides>
+																			</section>
+																			<section>
+																					<h2>Intuition <span class="subtitle"><br>
+																						Volatility (standard deviation of returns) scales with time: $\sigma \sqrt{t}$    </span></h2>
+																						<ul>
+																							<li>$\sigma$ is the standard deviation of the underlying random walk</li>
+																						</ul>
+																					<img src="imgs/randomwalk4.png"/ height=300>
+																					<ul>
+																						<li>If we now look at the returns of e.g. 500 houses, will the distribution look similar to distribution of e.g. 500 random walk processes?</li>
+																					</ul>
+																					<aside class="notes">
+
+																					<asides>
+																				</section>
+																				<section data-markdown >
+																					<textarea data-template>
+																						## Random Walk in Real Estate?<span class="subtitle"><br/>Maths would be much easier if returns followed a random walk!</span>
+
+																						* <a href="https://academic.oup.com/rfs/article-abstract/34/8/3695/6187964">Giacoletti (2021)</a> shows that residential real estate returns cannot be described well by random walk process.
+																						* <a href="https://doi.org/10.1093/rfs/hhaa122">Sagi (2020)</a> confirms these findings for commercial real estate
+																						* Standard deviations do not "fan out" as suggested by $\sigma \sqrt{t}$ and variability higher than expected for short holding periods.
+																					</textarea>
+																</section>
+
+
+																<section>
+																	<h2>3. Cyclicality <span class="subtitle"><br>
+																		Trough to trough was 15 to 17 years. Can we expect similar cycles?</span></h2>
+																	<img src="imgs/3_cyclicality.png" height=410 />
+																	<aside class="notes">
+																		Real estate asset prices historically seem to exhibit much stronger cyclicality than we observe in the stock market. The cycle tends to be largely national, and often even international, at least among investment properties that are large and prominent enough to attract international capital.
+
+																		The period of the cycle seems to be pretty long by economic standards, over ten years and more commonly 15 to 20 years. The evidence is that the cycles seem to be pretty regular. What causes such cyclicality? We are not sure, and there may be several causes, and there is no guarantee that the future will be very similar to the past in this regard.
+
+																		One theory is that it is related to the large use of debt financing in real estate investment. Mortgage and other debt or debt-like financing tends to be a larger share of real estate’s capital structure than is true for most stocks. And debt markets tend to be cyclical.
+
+																		The asset market may be, but isn’t necessarily or always, in sync with the space market. There have been times when the asset market was strong when the space market was week (early 1980s, early 2000s). A general economic recession will almost always cause some down movement in the space markets, but not necessarily in the asset market.
+																	</aside>
+																</section>
+
+																<section>
+																	<h2>4. Mean reversion <span class="subtitle"><br>
+																		Gravitation back to a long-run equilibrium value.</span></h2>
+																	<ul>
+																		<li>
+																			Example: Long-run US real house prices, 1890-2014
+																			<img src="imgs/4_meanreversion.png" height=350 />
+																			<br /><span class="source">Source: Robert Shiller, "Irrational Exuberance (2005)</span>
+																		</li>
+																	</ul>
+																	<aside class="notes">
+																		<p>This refers to the tendency of prices to revert toward some long-run level or trend.<p>
+
+																		<p>In part, over a long horizon, mean-reversion could describe some aspect of cyclicality.
+																			But over the shorter term, prices also seem to revert toward some long-run trend.</p>
+
+																		<p>There is a fundamental economic reason why such mean-reversion would make sense.
+																			Let's have a look at the two main components of housing value, land and structure.
+																			In many markets, approximately half of the value of the typical investment property
+																			reflect the <strong>land value</strong> component of the property asset value
+																			&ndash; For hot markets such as London or Cambridge, the land share can be much higher, though.</p>
+
+																			<p>The other half reflects the value of the built structure.
+																			The land component is in some sense like a pure, perpetual capital asset
+																			that is of very inelastic supply.
+																			Demand for land can rise, or fall, and the price of the land must rise and fall
+																			accordingly, as the supply is inelastic.
+																			But building structures are produced goods, very long-lived, of course,
+																			but produced goods nevertheless and in this sense not fundamentally different
+																			from other produced capital goods like cars, airplanes, ships, refrigerators…
+																			Produced goods prices reflect the price elasticity of their supply.</p>
+
+																			<p>The construction industry tends to be pretty price-elastic.
+																				In most countries, an increase in demand for construction does
+																				not drive up the price of construction very much or for very long.
+																				And vice versa, a decrease in demand for construction tends more to
+																				reduce the quantity of construction than to reduce its price.
+																				The price of construction reflects the marginal opportunity cost
+																				of the inputs into construction: labor, materials.
+																				These tend to be pretty elastically supplied most of the time in most places.</p>
+
+																				<p>While it may appear that construction prices rise over time,
+																				once you control for general inflation and for improvements in
+																				the quality of the construction, in fact the real cost of construction probably
+																				does not have much of an upward trend, if any, over the long term.
+																				At least, this has been the history.
+
+																				Thus, price elasticity of supply of structures (construction) causes some component
+																				of property asset prices to tend to revert toward the long run marginal
+																				cost of construction, which tends to be pretty stable in real terms.</p>
+																	</aside>
+																</section>
+																<section data-markdown >
+																	<textarea data-template>
+																	## What goes up... <span class="subtitle"><br/>...must come down again?</span>
+																	* Rent-price ratio (gross yield) for Amsterdam houses, 1650&ndash;2007
+																	<img src="imgs/rent_price_amsterdam.png" height=420>
+																	<aside class="notes">
+
+																	</aside>
+																	</textarea>
+																</section>
+
+																<section>
+																	<h2>5. Inertia & autoregression</h2>
+																	<img src="imgs/5_inertia.png" height=450 />
+																	<aside class="notes">
+																		This refers to the tendency of prices to display momentum. Once they start moving in one direction, they tend to continue to move in that direction for a while. The returns, or changes in the price levels, tend to reflect in part the previous period’s return. That is, the returns have “memory”. This is the opposite of the Random Walk type of process.
+
+																		What causes autoregression or inertia in real estate prices? It is the lack of perfect informational efficiency that distinguishes real estate markets from stock markets. When news arrives relevant to asset market values, nobody knows right away exactly what that means for the values of specific individual assets. In the face of such uncertainty, it is rational for investors to react conservatively, to minimize the amount by which they revise their “reservation prices” (the private valuations at which they would be willing to trade). If bad news arrives, sellers will only slightly or slowly revise downwards the prices at which they are willing to sell, though buyers may tend to more quickly and substantially reduce the prices at which they are willing to buy. The market may display a greater reduction in trading volume than in the prices observed of transactions that do get consummated. Essentially, the news does probably eventually get fully incorporated into transaction prices, but it happens gradually, with a little bit of the news getting incorporated each period, for some time. This creates autocorrelated returns, serial correlation. The return in one period tends to be positively correlated with the return in the previous period.
+
+																	</aside>
+																</section>
+
+																<section>
+																	<h2>5. "Smooth" returns?<span class="subtitle"><br>Last period's return predicts today's</span></h2>
+																	<img src="imgs/5_inertia_returns.png" height=450 />
+																	<aside class="notes">
+																		The return chart shows how past returns are correlated with current returns.
+																		Here, we see that the correltations with lag 1 through 4 are above
+																		the 95% confidence boundary -- the dashed blue lines.
+
+																		This indicates some predicability of asset prices,
+																		at least at the market level.
+																	</aside>
+																</section>
+																<section data-markdown >
+																	<textarea data-template>
+																	## Example <span class="subtitle"><br/>How to test for auto-correlation in a spreadsheet?</span>
+
+																	<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9razLlVjI9-_hFM8b9f1ysIdXyN5d90QEFziN8e6KrZ-jYdM0qjTUoe3awURumoU4cQC9p7oLIqfs/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false" width=800 height=400></iframe>
+
+
+																	<p class='source'>Try the <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9razLlVjI9-_hFM8b9f1ysIdXyN5d90QEFziN8e6KrZ-jYdM0qjTUoe3awURumoU4cQC9p7oLIqfs/pubhtml?gid=0&single=true">Spreadsheet</a></p>
+																	<aside class="notes">
+
+																	</aside>
+																	</textarea>
+																</section>
+
+																<section>
+																	<h2>In-between summary <span class="subtitle"><br>
+																		First 5 components apply systematically to all properties/market</span></h2>
+																	<img src="imgs/in_between_summary.png" height=400 />
+																	<aside class="notes">
+																		Let’s summarize up to now. We have introduced five components of private real estate market returns. All five of these components apply systematically to all properties, hence, they apply to aggregate market returns, the types of returns that are reflected in price indexes (such as, in the thick black line in the chart in the slide, the aggregate index). This slide summarizes the sources or causes of these five components of property market price dynamics, as we have discussed in preceding slides.
+
+																		The next two components of property price dynamics are non-systematic across individual properties, that is, they apply to how individual property prices move differently than or separately from each other and from the market wide average…
+																	</aside>
+																</section>
+
+																<section>
+																	<h2>6. Price-dispersion <span class="subtitle"><br>
+																		At the asset-level, actual-prices can deviate from predicted prices.</span></h2>
+																		<ul>
+																			<li>Estimating a repeat sales regression for Cambridge homes - how well does the estimated value explain the sales values?
+																				<ul><li>Residuals a measure of deal specific noise. SD ~0.15-30.</li></ul>
+																			</li>
+																		</ul>
+																	<img src="imgs/6_price_dispersion.png" height=360 />
+																	<aside class="notes">
+																		In a sense, this is not really a “dynamic” component. No one can know the exact market value of any given property at any given time. The transaction price in any given deal will be the result of, effectively, of a search and negotiation process between one buyer and one seller, neither of whom knows the exact market value. Even if there is an auction process, the process still largely represents two individuals “finding each other”, with neither knowing very exactly the market value. The result is that actual sale prices are distributed randomly around the (unobservable) “true market value” (which by definition equals the mean of the ex ante probability distribution of the sale price).
+
+																		This type of random dispersion in observable prices differs from the
+																		“volatility” that has been previously described (in components 2)
+																		 in that price dispersion, or “noise”, does not accumulate over time.
+																		 It occurs only if and when a property is sold.
+																		 Still, we need to consider this aspect of real estate prices
+																		 if we are going to simulate the property price dynamics that
+																		 matter for investors. Investors hold relatively small portfolios
+																		 of assets and cannot simply diversify away this noise
+																			- see our RFS paper, again.
+																	</aside>
+
+																</section>
+
+																<section>
+																	<h2>7. Idiosyncratic Drift <span class="subtitle"><br>
+																		Different markets/sectors drift away from overall average.</span></h2>
+																	<img src="imgs/7_idiosyncratic_drift.png" height="450" />
+																	<aside class="notes">
+																		<p>This refers to accumulating volatility that is specific to individual assets,
+																		uncorrelated with volatility or other price movements in other assets,
+																		and hence, uncorrelated with the market index. Over time, this causes
+																		individual property price paths to diverge from the market index.</p>
+
+																		<p>Yes, It is difficult, almost impossible, to accurately depict the
+																			true price paths of individual properties, but we can observe the
+																			cumulative drift in their price paths by the dispersion in the individual
+																			repeat-sales pairs as a function of the time between their sales.
+																			However, I cannot plot a nice figure that is showing the idiosyncratic drift
+																		for an individual building</p>
+
+																			<p>In this figure, I instead show an idiosyncratic drift for a submarket.
+																				All the way up to the great financial crisis, London's housing markets moved
+																				along with national trends. The red line is not very different from the other regions
+																				- Ignoring Northern Ireland for now.</p>
+																			<p>After the crisis, something changed: London prices decoupled from the rest of the country,
+																			and started following their own path. This new trend, that is an example for idiosyncratic drift at the submarket level.</p>
+
+
+																		<p>Coming back to individual repeat-sales pairs,
+																			we can quantify the approximate typical magnitude of idiosyncratic drift.
+																			It is surprisingly large, on the order of 15-30% per year in terms of standard
+																			deviation of the individual property return differences from the market index.
+
+																			This estimate is a bit lower for US commercial properties.
+
+																			Other analysis indicates that the idiosyncratic drift
+																			is not exactly a Random Walk. There seems to be a limit to
+																			how far individual property values can usually deviate
+																			from the market trend in which they are located.
+																			Individual properties can only do “so well” or “so poorly”,
+																			compared to the market average.</p>
+
+																			<p>Still, as you can glean from this depiction of sub-market drift,
+																			cumulative idiosyncratic drift is likely to be quite significant
+																			for investment performance at the micro-level of individual properties.</p>
+
+																			<p>Another thing that we observe is that individual property idiosyncratic
+																				performance tends to occur largely in the first few years after acquisition,
+																				either doing well or poorly compared to the market average,
+																				and then their returns tend to revert toward the market average return,
+																				before the property is re-sold again.</p>
+
+																		<p>Idiosyncratic investment performance no doubt partly reflects “luck”.
+																			But surely it also reflects the relative skill and diligence of some property
+																			investors compared to others. For this reason, idiosyncratic performance should
+																			be of particular interest to micro-level property investors.
+																			There is not much you can do about the market your property is in.
+																			But there may be a lot you can do about your particular property within that market.</p>
+																	</aside>
+																</section>
+
+																<section>
+																	<h2>8. Black Swan Events <span class="subtitle"><br>
+																		Unpredictable major jumps affecting all assets… Fat tail events.</span></h2>
+																	<img src="imgs/8_black_swan.png" height="450" />
+																	<aside class="notes">
+																		And sometimes the brown matter hits the fan... Black Swan events are defined as extremely rare statistically. However, these odds of appearing are based on historic price dynamics. During crises, the previous dynamics can break and an catastrophic event that used to be very unlikely suddenly materialises.
+																	</aside>
+																</section>
+
+
+																<section data-markdown >
+																	<textarea data-template>
+																		## Summing Up <span class="subtitle"><br/>Price dynamics in real estate: a complex picture.</span>
+
+																		* The dynamics will differ across real estate sectors, markets and times
+
+																		*	Very broadly, real estate as an asset class:
+																			-	exhibits distinct trends, cycles, momentum, mean reversion, black swan events and fat tail risk.
+																			- produces returns that are NOT normally distributed.
+
+																		* Doing a quick check of a time series along the 8 dimensions will only take a few minutes. So, do that as a first step of any analysis!
+																	</textarea>
+																</section>
+
+
+
+																<section data-markdown >
+																	<textarea data-template>
+																	## Smoothing <span class="subtitle"><br/>Valuation based indices are too smooth: SD 1.19%, FOAC: 0.86</span>
+
+																	<iframe width="100%" height="300" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSlT96qpxEUVgf-_g-qiTI85_mkQKHUVnsLB2UH4Ek0tHfovR53BmKVHZlrQAZs6y21vFxhcyWEPqWh/pubchart?oid=1036766857&amp;format=interactive"></iframe>
+
+																	* Can we change the underlying problem at the asset level?
+																		- Not really, there are good reasons for appraisors to incorporate new information gradually.
+																	* We can (and should!) alleviate the problem at the index level.
+
+																</textarea>
+																</section>
+
+																<section data-markdown >
+																	<textarea data-template>
+																	## De-Smoothing <span class="subtitle"><br/>Band-aid for valuation based indices.</span>
+
+																	* We first model the outcome of the valuations as a moving average process.
+																	* The smoothed return $r_t$ is a weighted average of previous return $r_{t-1}$ and the "true" return $r\text{*}_t$.
+																		- $ r_t = \alpha r_{t-1} + (1 - \alpha)r\text{*}_t $
+																		- The parameter $\alpha$ describes the weight on previous return.
+																	* We can re-arrange, solve for $ r\text{*}_t $
+																		- `$ r\text{*}_t =  \frac{r_t - \alpha r_{t-1}} { 1 - \alpha} $`
+																	* De-smoothing is based on the assumption that returns are moving averages.
+																		- Do we know it is the right abstraction? Not really, but it works...
+																		- Correction takes 2 minutes in a <a href="https://docs.google.com/spreadsheets/d/1ePF63vfDc36OmGbQql2ANPOJChzqtKRrZCO7Qtjwsu8/edit?usp=sharing">spreadsheet</a>.
+																</textarea>
+																</section>
+
+																<section data-markdown >
+																	<textarea data-template>
+																	## De-Smoothed returns <span class="subtitle"><br/>Desmoothed with alpha = 0.7. More realistic?</span>
+
+																	<iframe width="600" height="371" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSlT96qpxEUVgf-_g-qiTI85_mkQKHUVnsLB2UH4Ek0tHfovR53BmKVHZlrQAZs6y21vFxhcyWEPqWh/pubchart?oid=100148024&amp;format=interactive"></iframe>
+
+																	* Not too bad: mean unchanged, SD 2.1% &uarr;, FOAC 0.13 &darr;
+																	</textarea>
+																</section>
+
+																<section data-markdown >
+																	<textarea data-template>
+																	## Which alpha?<span class="subtitle"><br/>Which parameter value alpha is the right one?</span>
+
+
+																	<table class="noborders">
+																		<tr>
+																			<td>
+																				alpha = 0.1
+																				<iframe width="600" height="175" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSlT96qpxEUVgf-_g-qiTI85_mkQKHUVnsLB2UH4Ek0tHfovR53BmKVHZlrQAZs6y21vFxhcyWEPqWh/pubchart?oid=1308120543&amp;format=image"></iframe>
+																			</td>
+																			<td>
+																				alpha = 0.3
+																				<iframe width="600" height="175" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSlT96qpxEUVgf-_g-qiTI85_mkQKHUVnsLB2UH4Ek0tHfovR53BmKVHZlrQAZs6y21vFxhcyWEPqWh/pubchart?oid=878805168&amp;format=image"></iframe>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td>
+																				alpha = 0.7
+																				<iframe width="600" height="175" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSlT96qpxEUVgf-_g-qiTI85_mkQKHUVnsLB2UH4Ek0tHfovR53BmKVHZlrQAZs6y21vFxhcyWEPqWh/pubchart?oid=1763003004&amp;format=image"></iframe>
+																			</td>
+																			<td>
+																				alpha = 0.9
+																				<iframe width="600" height="175" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSlT96qpxEUVgf-_g-qiTI85_mkQKHUVnsLB2UH4Ek0tHfovR53BmKVHZlrQAZs6y21vFxhcyWEPqWh/pubchart?oid=498247785&amp;format=image"></iframe>
+																			</td>
+																		</tr>
+																	</table>
+																	</textarea>
+																</section>
+
+																<section data-markdown >
+																	<textarea data-template>
+																	## Justifying alpha <span class="subtitle"><br/>SD and FOAC as a function of alpha.</span>
+
+																	<iframe width="839" height="270" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSlT96qpxEUVgf-_g-qiTI85_mkQKHUVnsLB2UH4Ek0tHfovR53BmKVHZlrQAZs6y21vFxhcyWEPqWh/pubchart?oid=134336995&amp;format=interactive"></iframe>
+
+																	* Which range of alpha-values leads to reasonable risk and FOAC estimates?
+																		- 0.6&ndash;0.7 seems reasonable in **this example** &ndash; could differ in other cases.
+																		- Should FOAC be 0? Not if the economic fundamentals exhibit autocrrelation. 0.1&ndash;0.2, maybe. Negative FOAC? Better not.
+																	* Is the additional parameter uncertainty around alpha worth it? YES!!!
+																		- Smoothed returns are most likely worse than imperfectly desmoothed returns.
+																	</textarea>
+																</section>
+
+
+																<section>
+																	<h2>Know your data <span class="subtitle"><br>
+																	Don't force a square peg through a round hole.</span></h2>
+																	<p class="centred"><img src="imgs/gigo.jpg" /></p>
+																	<p class="source centred">Illustration: <a href="http://www.mickstevens.com">http://www.mickstevens.com</a></p>
+																	<aside class="notes">
+																	</aside>
+																</section>
+
+
+
+								<section data-markdown data-background-image="imgs/philly.jpg" data-background-size="contain">
+									<textarea data-template>
+									## <span class="subtitle"></span>
+									</textarea>
+								</section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				transition: 'none',
+				width: 1244,
+				height: 700,
+				margin: 0.1,
+				math: {
+					mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+					config: 'TeX-AMS_HTML-full',
+					// pass other options into `MathJax.Hub.Config()`
+					TeX: { Macros: { RR: "{\\bf R}" } }
+				},
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath],
+				transition: 'none'
+			});
+		</script>
+	</body>
+</html>
